@@ -50,7 +50,7 @@
             <h3 class="">Kids Daily Multivitamin</h3>
             <div class="hero-review">
                 <img src="./assets/download.svg" alt="">
-                <p>4706 Reviews</p>
+                <p>4708 Reviews</p>
             </div>
             <div class="hero-amount">
                 <p>$15</p> <p><span>$30</span></p>
@@ -94,8 +94,8 @@
             </div>
             <div class="hero-radio">
              <div class="radio-content">
-                 <div class="hero-radio1">
-                 <input type="radio" id="radio1" name="image-radio" value="image1">
+                 <div class="hero-radio1 active-hero-radio">
+                 <input type="radio" id="radio1" checked name="image-radio" value="image1 ">
         <label for="radio1">
             <img src="./assets/multi copy.png" alt="Image 1">
             </label>
@@ -217,9 +217,104 @@
   </section>
   
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Variables
+    const gallery = document.querySelector('.hero-gallery');
+    const imagesContainer = document.querySelector('.hero-img');
+    const imgArray = [
+        './assets/Hiya_Bottle-clear_desktop_v2.png',
+        './assets/Bottle_f3818282-ef5c-4fb3-b614-0ea62d2f1984.jpg',
+        './assets/bottlestickers_d0bc50d3-43e8-4cec-9ea3-c8a92f887345.jpg',
+        './assets/stickers_604ac226-1a68-41df-a692-8584026afab3.jpg',
+        './assets/Y3KJVNRQ.jpg'
+    ];
+    let currentIndex = 0;
+
+    // Elements for modal
+    const modalContainer = document.querySelector('.modal-container');
+    const modalImg = modalContainer.querySelector('.modal-img img');
+    const modalLeft = modalContainer.querySelector('.modal-left');
+    const modalRight = modalContainer.querySelector('.modal-right');
+    const modalClose = modalContainer.querySelector('.modal-close');
+
+    // Function to update the main image
+    const updateImage = (direction) => {
+        const currentImg = imagesContainer.querySelector('img');
+        currentImg.classList.remove('slide-right', 'slide-left');
+        void currentImg.offsetWidth; // Trigger reflow to restart the animation
+
+        currentIndex = direction === 'right' ? (currentIndex + 1) % imgArray.length : (currentIndex - 1 + imgArray.length) % imgArray.length;
+        currentImg.src = imgArray[currentIndex];
+        currentImg.classList.add(direction === 'right' ? 'slide-right' : 'slide-left');
+    };
+
+    // Initialize main image
+    const initImg = document.createElement('img');
+    initImg.src = imgArray[currentIndex];
+    initImg.style.width = '100%';
+    initImg.style.height = '100%';
+    initImg.style.objectFit = 'cover';
+    imagesContainer.appendChild(initImg);
+
+    // Event listeners for navigation
+    gallery.querySelector('.nav-left').addEventListener('click', () => {
+        updateImage('left');
+    });
+
+    gallery.querySelector('.nav-right').addEventListener('click', () => {
+        updateImage('right');
+    });
+
+    // Thumbnail click event
+    document.querySelectorAll('.hero-nav-img .img-overlay img').forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', () => {
+            const currentImg = imagesContainer.querySelector('img');
+            currentImg.classList.remove('slide-right', 'slide-left');
+            void currentImg.offsetWidth; // Trigger reflow to restart the animation
+
+            currentIndex = index;
+            const direction = index > currentIndex ? 'right' : 'left';
+            currentImg.src = imgArray[currentIndex];
+            currentImg.classList.add(direction === 'right' ? 'slide-right' : 'slide-left');
+            updateProgressBar(); // Assuming you have a function to update the progress bar
+        });
+    });
+
+    // Zoom icon click event to open modal
+    document.querySelector('.zoom-icon').addEventListener('click', () => {
+        modalImg.src = imgArray[currentIndex];
+        modalContainer.classList.add('show-modal');
+    });
+
+    // Close icon click event to close modal
+    modalClose.addEventListener('click', () => {
+        modalContainer.classList.remove('show-modal');
+    });
+
+    // Modal navigation
+    modalLeft.addEventListener('click', () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : imgArray.length - 1;
+        modalImg.src = imgArray[currentIndex];
+    });
+
+    modalRight.addEventListener('click', () => {
+        currentIndex = (currentIndex < imgArray.length - 1) ? currentIndex + 1 : 0;
+        modalImg.src = imgArray[currentIndex];
+    });
+
+    // Clicking outside the image to close the modal
+    modalContainer.addEventListener('click', (e) => {
+        if (e.target === modalContainer) {
+            modalContainer.classList.remove('show-modal');
+        }
+    });
+});
+
+  </script>
 
   
- <script>
+ <!-- <script>
     document.addEventListener('DOMContentLoaded', () => {
     // Variables
     const gallery = document.querySelector('.hero-gallery');
@@ -310,7 +405,7 @@
     });
 });
 
-</script> 
+</script>  -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
     const heroLink = document.querySelector('.hero-link p');
