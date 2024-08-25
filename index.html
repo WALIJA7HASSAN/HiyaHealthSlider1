@@ -53,7 +53,8 @@
                 <p>4708 Reviews</p>
             </div>
             <div class="hero-amount">
-                <p>$15</p> <p><span>$30</span></p>
+                 <p class="current-price">$15</p>
+  <p><span class="original-price">$30</span></p>
                 <button>50% Off First Order</button>
             </div>
             <p class="hero-p-bold"><span>Chewable Multivitamin</span> with 15 essential vitamins & minerals to support immunity, growth, & development among kids.</p>
@@ -350,24 +351,34 @@
 
  </script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    const radioContainers = document.querySelectorAll('.hero-radio > div> div');
+   document.addEventListener('DOMContentLoaded', () => {
+    const radioContainers = document.querySelectorAll('.hero-radio > div > div');
+    const priceElement = document.querySelector('.hero-amount .current-price');
+    const originalPriceElement = document.querySelector('.hero-amount .original-price');
 
     radioContainers.forEach(container => {
-        const radioInput = container.querySelector('input[type="radio"]');
+      const radioInput = container.querySelector('input[type="radio"]');
 
-        radioInput.addEventListener('change', () => {
-            // Remove 'active-hero-radio' class from all radio containers
-            radioContainers.forEach(div => div.classList.remove('active-hero-radio'));
+      radioInput.addEventListener('change', () => {
+        // Remove 'active-hero-radio' class from all radio containers
+        radioContainers.forEach(div => div.classList.remove('active-hero-radio'));
 
-            // Add 'active-hero-radio' class to the selected radio container
-            if (radioInput.checked) {
-                container.classList.add('active-hero-radio');
-            }
-        });
+        // Add 'active-hero-radio' class to the selected radio container
+        if (radioInput.checked) {
+          container.classList.add('active-hero-radio');
+
+          // Update the prices based on the selected radio button
+          if (radioInput.id === 'radio1') {
+            priceElement.textContent = '$15';
+            originalPriceElement.textContent = '$30';
+          } else if (radioInput.id === 'radio2') {
+            priceElement.textContent = '$30';
+            originalPriceElement.textContent = '$60';
+          }
+        }
+      });
     });
-});
-
+  });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
