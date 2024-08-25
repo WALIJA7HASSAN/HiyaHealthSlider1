@@ -87,11 +87,11 @@
 </select>
 
             <div class="kids-container">
-                <button class="active-kid-btn">1 Kid</button>
-                <button >2 Kid</button>
-                <button >3 Kid</button>
-                <button >4 Kid</button>
-                <button >5 Kid</button>
+               <button class="active-kid-btn" data-kids="1">1 Kid</button>
+    <button data-kids="2">2 Kids</button>
+    <button data-kids="3">3 Kids</button>
+    <button data-kids="4">4 Kids</button>
+    <button data-kids="5">5 Kids</button>
             </div>
             <div class="hero-radio">
              <div class="radio-content">
@@ -351,34 +351,91 @@
 
  </script>
 <script>
-   document.addEventListener('DOMContentLoaded', () => {
-    const radioContainers = document.querySelectorAll('.hero-radio > div > div');
-    const priceElement = document.querySelector('.hero-amount .current-price');
-    const originalPriceElement = document.querySelector('.hero-amount .original-price');
+    document.addEventListener('DOMContentLoaded', () => {
+  const radioContainers = document.querySelectorAll('.hero-radio > div > div');
+  const priceElement = document.querySelector('.hero-amount .current-price');
+  const originalPriceElement = document.querySelector('.hero-amount .original-price');
+  const kidButtons = document.querySelectorAll('.kids-container button');
+  const kidSelect = document.querySelector('.kids-sm-select');
+  let selectedKidCount = 1; // Default to 1 Kid
 
-    radioContainers.forEach(container => {
-      const radioInput = container.querySelector('input[type="radio"]');
+  const pricesRadio1 = {
+    1: { price: 15, original: 30 },
+    2: { price: 14, original: 28 },
+    3: { price: 12.5, original: 25 },
+    4: { price: 12, original: 24 },
+    5: { price: 11.5, original: 23 }
+  };
 
-      radioInput.addEventListener('change', () => {
-        // Remove 'active-hero-radio' class from all radio containers
-        radioContainers.forEach(div => div.classList.remove('active-hero-radio'));
+  const pricesRadio2 = {
+    1: { price: 30, original: 60 },
+    2: { price: 28, original: 56 },
+    3: { price: 25, original: 50 },
+    4: { price: 24, original: 48 },
+    5: { price: 23, original: 46 }
+  };
 
-        // Add 'active-hero-radio' class to the selected radio container
-        if (radioInput.checked) {
-          container.classList.add('active-hero-radio');
+  function updatePrices() {
+    const radio1Checked = document.getElementById('radio1').checked;
+    const selectedPrices = radio1Checked ? pricesRadio1 : pricesRadio2;
+    const { price, original } = selectedPrices[selectedKidCount];
+    priceElement.textContent = `$${price}`;
+    originalPriceElement.textContent = `$${original}`;
+  }
 
-          // Update the prices based on the selected radio button
-          if (radioInput.id === 'radio1') {
-            priceElement.textContent = '$15';
-            originalPriceElement.textContent = '$30';
-          } else if (radioInput.id === 'radio2') {
-            priceElement.textContent = '$30';
-            originalPriceElement.textContent = '$60';
-          }
-        }
-      });
+  function resetSelections() {
+    // Reset kid buttons
+    kidButtons.forEach(button => button.classList.remove('active-kid-btn'));
+    const defaultKidButton = kidButtons[0]; // Assuming 1 Kid is the first button
+    defaultKidButton.classList.add('active-kid-btn');
+    selectedKidCount = parseInt(defaultKidButton.getAttribute('data-kids'), 10);
+    
+    // Reset select dropdown
+    kidSelect.value = '1'; // Assuming 1 Kid is the default option
+    selectedKidCount = 1;
+    
+    // Reset radio buttons
+    radioContainers.forEach(div => div.classList.remove('active-hero-radio'));
+    document.getElementById('radio1').checked = true; // Default to radio1
+    document.getElementById('radio1').parentElement.classList.add('active-hero-radio');
+    
+    // Update prices
+    updatePrices();
+  }
+
+  kidButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      kidButtons.forEach(btn => btn.classList.remove('active-kid-btn'));
+      button.classList.add('active-kid-btn');
+      selectedKidCount = parseInt(button.getAttribute('data-kids'), 10);
+      updatePrices();
     });
   });
+
+  kidSelect.addEventListener('change', (event) => {
+    selectedKidCount = parseInt(event.target.value, 10);
+    updatePrices();
+  });
+
+  radioContainers.forEach(container => {
+    const radioInput = container.querySelector('input[type="radio"]');
+    
+    radioInput.addEventListener('change', () => {
+      radioContainers.forEach(div => div.classList.remove('active-hero-radio'));
+      if (radioInput.checked) {
+        container.classList.add('active-hero-radio');
+        updatePrices();
+      }
+    });
+  });
+
+  // Initialize with default settings
+  updatePrices();
+
+  // Reset selections on window resize
+  window.addEventListener('resize', resetSelections);
+});
+
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
